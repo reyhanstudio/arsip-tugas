@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Sistem Arsip Tugas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+
+  <div class="card shadow-sm border-0" style="width: 100%; max-width: 400px;">
+    <div class="card-header bg-primary text-white text-center py-3">
+      <h5 class="mb-0 fw-bold">Arsip Tugas Digital</h5>
+      <small>Silakan login menggunakan akun Anda</small>
+    </div>
+    <div class="card-body p-4">
+      <div id="alert-box" class="alert alert-danger d-none" role="alert"></div>
+      <form id="login-form">
+        <div class="mb-3">
+          <label class="form-label">Email / Username</label>
+          <input type="email" id="email" class="form-control" placeholder="nama@email.com" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+        </div>
+        <button type="submit" id="btn-login" class="btn btn-primary w-100 fw-semibold">Masuk</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const alertBox = document.getElementById('alert-box');
+      const btn = document.getElementById('btn-login');
+
+      btn.disabled = true;
+      btn.textContent = 'Memproses...';
+      alertBox.classList.add('d-none');
+
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        alertBox.textContent = 'Login gagal: Email atau password salah.';
+        alertBox.classList.remove('d-none');
+        btn.disabled = false;
+        btn.textContent = 'Masuk';
+      } else {
+        window.location.href = 'dashboard.html';
+      }
+    });
+  </script>
+</body>
+</html>
